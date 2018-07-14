@@ -85,52 +85,27 @@ function provisioningmodule_MetaData()
  *
  * @return array
  */
-function provisioningmodule_ConfigOptions()
+function smartdns_ConfigOptions()
 {
-    return array(
+    return [
         // a text field type allows for single line text input
-        'Text Field' => array(
-            'Type' => 'text',
-            'Size' => '25',
-            'Default' => '1024',
-            'Description' => 'Enter in megabytes',
-        ),
-        // a password field type allows for masked text input
-        'Password Field' => array(
-            'Type' => 'password',
-            'Size' => '25',
+        "ip" => [
+            "Type" => 'text',
+            'Size' => '16',
             'Default' => '',
-            'Description' => 'Enter secret value here',
-        ),
-        // the yesno field type displays a single checkbox option
-        'Checkbox Field' => array(
-            'Type' => 'yesno',
-            'Description' => 'Tick to enable',
-        ),
+            'Description' => 'Enter your current IP address.',
+        ],
+
         // the dropdown field type renders a select menu of options
-        'Dropdown Field' => array(
+        'region' => [
             'Type' => 'dropdown',
-            'Options' => array(
-                'option1' => 'Display Value 1',
-                'option2' => 'Second Option',
-                'option3' => 'Another Option',
-            ),
-            'Description' => 'Choose one',
-        ),
-        // the radio field type displays a series of radio button options
-        'Radio Field' => array(
-            'Type' => 'radio',
-            'Options' => 'First Option,Second Option,Third Option',
-            'Description' => 'Choose your option!',
-        ),
-        // the textarea field type allows for multi-line text input
-        'Textarea Field' => array(
-            'Type' => 'textarea',
-            'Rows' => '3',
-            'Cols' => '60',
-            'Description' => 'Freeform multi-line text input field',
-        ),
-    );
+            'Options' => [
+                'option1' => 'United States',
+                'option2' => 'United Kingdom',
+            ],
+            'Description' => 'Select the Netlfix region you would like to access.',
+        ],
+    ];
 }
 
 /**
@@ -149,7 +124,7 @@ function provisioningmodule_ConfigOptions()
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_CreateAccount(array $params)
+function smartdns_CreateAccount(array $params)
 {
     try {
         // Call the service's provisioning function, using the values provided
@@ -168,6 +143,17 @@ function provisioningmodule_CreateAccount(array $params)
         //     ...
         // )
         // ```
+        
+        $ip = $params["configoption1"];
+        $region = $params["configoption2"];
+        $serverip = $params["serverip"];
+        $serverusername = $params["serverusername"];
+        $serverpassword = $params["serverpassword"];
+        
+        
+        
+        
+       
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
         logModuleCall(
