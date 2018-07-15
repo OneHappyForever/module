@@ -97,9 +97,9 @@ function smartdns_ConfigOptions()
         ),
 
         // the dropdown field type renders a select menu of options
-        'region' => array (
+        'region' => array(
             'Type' => 'dropdown',
-            'Options' => array (
+            'Options' => array(
                 'option1' => 'United States',
                 'option2' => 'United Kingdom',
             ),
@@ -245,7 +245,7 @@ function smartdns_SuspendAccount(array $params)
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_UnsuspendAccount(array $params)
+function smartdns_UnsuspendAccount(array $params)
 {
     try {
         // Call the service's unsuspend function, using the values provided by
@@ -297,7 +297,7 @@ function provisioningmodule_UnsuspendAccount(array $params)
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_TerminateAccount(array $params)
+function smartdns_TerminateAccount(array $params)
 {
     try {
         // Call the service's terminate function, using the values provided by
@@ -353,7 +353,7 @@ function provisioningmodule_TerminateAccount(array $params)
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_ChangePassword(array $params)
+function smartdns_ChangePassword(array $params)
 {
     try {
         // Call the service's change password function, using the values
@@ -399,7 +399,7 @@ function provisioningmodule_ChangePassword(array $params)
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_ChangePackage(array $params)
+function smartdns_ChangePackage(array $params)
 {
     try {
         // Call the service's change password function, using the values
@@ -447,7 +447,7 @@ function provisioningmodule_ChangePackage(array $params)
  *
  * @return array
  */
-function provisioningmodule_TestConnection(array $params)
+function smartdns_TestConnection(array $params)
 {
     try {
         // Call the service's connection test function.
@@ -484,7 +484,7 @@ function provisioningmodule_TestConnection(array $params)
  *
  * @return array
  */
-function provisioningmodule_AdminCustomButtonArray()
+function smartdns_AdminCustomButtonArray()
 {
     return array(
         "Button 1 Display Value" => "buttonOneFunction",
@@ -503,7 +503,7 @@ function provisioningmodule_AdminCustomButtonArray()
  *
  * @return array
  */
-function provisioningmodule_ClientAreaCustomButtonArray()
+function smartdns_ClientAreaCustomButtonArray()
 {
     return array(
         "Action 1 Display Value" => "actionOneFunction",
@@ -526,7 +526,7 @@ function provisioningmodule_ClientAreaCustomButtonArray()
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_buttonOneFunction(array $params)
+function smartdns_buttonOneFunction(array $params)
 {
     try {
         // Call the service's function, using the values provided by WHMCS in
@@ -562,7 +562,7 @@ function provisioningmodule_buttonOneFunction(array $params)
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_actionOneFunction(array $params)
+function smartdns_actionOneFunction(array $params)
 {
     try {
         // Call the service's function, using the values provided by WHMCS in
@@ -599,7 +599,7 @@ function provisioningmodule_actionOneFunction(array $params)
  *
  * @return array
  */
-function provisioningmodule_AdminServicesTabFields(array $params)
+function smartdns_AdminServicesTabFields(array $params)
 {
     try {
         // Call the service's function, using the values provided by WHMCS in
@@ -646,7 +646,7 @@ function provisioningmodule_AdminServicesTabFields(array $params)
  * @see https://developers.whmcs.com/provisioning-modules/module-parameters/
  * @see provisioningmodule_AdminServicesTabFields()
  */
-function provisioningmodule_AdminServicesTabFieldsSave(array $params)
+function smartdns_AdminServicesTabFieldsSave(array $params)
 {
     // Fetch form submission variables.
     $originalFieldValue = isset($_REQUEST['provisioningmodule_original_uniquefieldname'])
@@ -690,7 +690,7 @@ function provisioningmodule_AdminServicesTabFieldsSave(array $params)
  *
  * @return array
  */
-function provisioningmodule_ServiceSingleSignOn(array $params)
+function smartdns_ServiceSingleSignOn(array $params)
 {
     try {
         // Call the service's single sign-on token retrieval function, using the
@@ -735,7 +735,7 @@ function provisioningmodule_ServiceSingleSignOn(array $params)
  *
  * @return array
  */
-function provisioningmodule_AdminSingleSignOn(array $params)
+function smartdns_AdminSingleSignOn(array $params)
 {
     try {
         // Call the service's single sign-on admin token retrieval function,
@@ -793,10 +793,10 @@ function provisioningmodule_AdminSingleSignOn(array $params)
  *
  * @return array
  */
-function provisioningmodule_ClientArea(array $params)
+function smartdns_ClientArea(array $params)
 {
     // Determine the requested action and set service call parameters based on
-    // the action.
+    // the action.  
     $requestedAction = isset($_REQUEST['customAction']) ? $_REQUEST['customAction'] : '';
 
     if ($requestedAction == 'manage') {
@@ -810,16 +810,27 @@ function provisioningmodule_ClientArea(array $params)
     try {
         // Call the service's function based on the request action, using the
         // values provided by WHMCS in `$params`.
-        $response = array();
-
-        $extraVariable1 = 'abc';
-        $extraVariable2 = '123';
+        $pid = $params["serviceid"];
+        $serverip = $params["serverip"];
+        $serverusername = $params["serverusername"];
+        $serverpassword = $params["serverpassword"];
+        $database = "smartdns";
+        
+        //connect to database
+        $conn = new mysqli($serverip, $serverusername, $serverpassword, $database);
+    
+        $ip = $conn->query("SELECT ip FROM user WHERE pid=$pid");
+        $region = $conn->query("SELECT region FROM user WHERE pid=$pid");
 
         return array(
             'tabOverviewReplacementTemplate' => $templateFile,
             'templateVariables' => array(
-                'extraVariable1' => $extraVariable1,
-                'extraVariable2' => $extraVariable2,
+                'ip' => $ip,
+                'region' => $region,
+                'serverip' => $serverip,
+                'serverusername' => $serverusername,
+                'serverpassword' => $serverpassword,
+                'database' => $database,                
             ),
         );
     } catch (Exception $e) {
