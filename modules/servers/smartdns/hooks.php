@@ -36,7 +36,7 @@
  *
  * @return mixed Return dependant upon hook function
  */
-function hook_provisioningmodule_clientedit(array $params)
+function hook_smartdns_clientedit(array $params)
 {
     try {
         // Call the service's function, using the values provided by WHMCS in
@@ -51,7 +51,7 @@ function hook_provisioningmodule_clientedit(array $params)
  *
  * add_hook(string $hookPointName, int $priority, string|array|Closure $function)
  */
-add_hook('ClientEdit', 1, 'hook_provisioningmodule_clientedit');
+add_hook('ClientEdit', 1, 'hook_smartdns_clientedit');
 
 /**
  * Insert a service item to the client area navigation bar.
@@ -69,9 +69,9 @@ add_hook('ClientAreaPrimaryNavbar', 1, function ($menu)
         // Add a link to the module filter.
         $menu->getChild('Services')
             ->addChild(
-                'Provisioning Module Products',
+                'SmartDNS Products',
                 array(
-                    'uri' => 'clientarea.php?action=services&module=provisioningmodule',
+                    'uri' => 'clientarea.php?action=services&module=smartdns',
                     'order' => 15,
                 )
             );
@@ -94,7 +94,7 @@ add_hook('ClientAreaSecondarySidebar', 1, function ($secondarySidebar)
     if (!is_null($secondarySidebar->getChild('My Services Actions'))) {
 
         // define new sidebar panel
-        $customPanel = $secondarySidebar->addChild('Provisioning Module Sample Panel');
+        $customPanel = $secondarySidebar->addChild('SmartDNS');
 
         // set panel attributes
         $customPanel->moveToFront()
@@ -110,7 +110,7 @@ add_hook('ClientAreaSecondarySidebar', 1, function ($secondarySidebar)
         $customPanel->addChild(
                 'Sample Link Menu Item',
                 array(
-                    'uri' => 'clientarea.php?action=services&module=provisioningmodule',
+                    'uri' => 'clientarea.php?action=services&module=smartdns',
                     'icon'  => 'fa-list-alt',
                     'order' => 2,
                 )
