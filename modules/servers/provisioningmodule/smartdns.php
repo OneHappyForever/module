@@ -87,25 +87,25 @@ function provisioningmodule_MetaData()
  */
 function smartdns_ConfigOptions()
 {
-    return [
+    return array(
         // a text field type allows for single line text input
-        "ip" => [
+        "ip" => array(
             "Type" => 'text',
             'Size' => '16',
             'Default' => '',
             'Description' => 'Enter your current IP address.',
-        ],
+        ),
 
         // the dropdown field type renders a select menu of options
-        'region' => [
+        'region' => array (
             'Type' => 'dropdown',
-            'Options' => [
+            'Options' => array (
                 'option1' => 'United States',
                 'option2' => 'United Kingdom',
-            ],
+            ),
             'Description' => 'Select the Netlfix region you would like to access.',
-        ],
-    ];
+        ),
+    );
 }
 
 /**
@@ -144,15 +144,25 @@ function smartdns_CreateAccount(array $params)
         // )
         // ```
         
+        //retrive needed data
+        $pid = $params["serviceid"];
         $ip = $params["configoption1"];
         $region = $params["configoption2"];
         $serverip = $params["serverip"];
         $serverusername = $params["serverusername"];
         $serverpassword = $params["serverpassword"];
+        $database = "smartdns";
         
         
+        //connect to database
+        $conn = new mysqli($serverip, $serverusername, $serverpassword, $database);
         
+        //edit database
+        $sql = "INSERT INTO user (pid, ip, region) VALUES ($pid, $ip, $region)";
+        $conn->query($sql);
         
+        //close connection
+        $conn->close();  
        
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
@@ -183,11 +193,29 @@ function smartdns_CreateAccount(array $params)
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_SuspendAccount(array $params)
+function smartdns_SuspendAccount(array $params)
 {
     try {
         // Call the service's suspend function, using the values provided by
         // WHMCS in `$params`.
+        $pid = $params["serviceid"];
+        $ip = $params["configoption1"];
+        $region = $params["configoption2"];
+        $serverip = $params["serverip"];
+        $serverusername = $params["serverusername"];
+        $serverpassword = $params["serverpassword"];
+        $database = "smartdns";
+        
+        //connect to database
+        $conn = new mysqli($serverip, $serverusername, $serverpassword, $database);
+        
+        //edit database
+        $sql = "UPDATE user SET ip=null WHERE pid=$pid";
+        $conn->query($sql);
+        
+        //close connection
+        $conn->close(); 
+        
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
         logModuleCall(
@@ -222,6 +250,25 @@ function provisioningmodule_UnsuspendAccount(array $params)
     try {
         // Call the service's unsuspend function, using the values provided by
         // WHMCS in `$params`.
+        
+        $pid = $params["serviceid"];
+        $ip = $params["configoption1"];
+        $region = $params["configoption2"];
+        $serverip = $params["serverip"];
+        $serverusername = $params["serverusername"];
+        $serverpassword = $params["serverpassword"];
+        $database = "smartdns";
+        
+        //connect to database
+        $conn = new mysqli($serverip, $serverusername, $serverpassword, $database);
+        
+        //edit database
+        $sql = "UPDATE user SET ip=$ip WHERE pid=$pid";
+        $conn->query($sql);
+        
+        //close connection
+        $conn->close(); 
+        
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
         logModuleCall(
@@ -255,6 +302,25 @@ function provisioningmodule_TerminateAccount(array $params)
     try {
         // Call the service's terminate function, using the values provided by
         // WHMCS in `$params`.
+        
+        $pid = $params["serviceid"];
+        $ip = $params["configoption1"];
+        $region = $params["configoption2"];
+        $serverip = $params["serverip"];
+        $serverusername = $params["serverusername"];
+        $serverpassword = $params["serverpassword"];
+        $database = "smartdns";
+        
+        //connect to database
+        $conn = new mysqli($serverip, $serverusername, $serverpassword, $database);
+        
+        //edit database
+        $sql = "DELETE FROM MyGuests WHERE pid=$pid";
+        $conn->query($sql);
+        
+        //close connection
+        $conn->close(); 
+        
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
         logModuleCall(
