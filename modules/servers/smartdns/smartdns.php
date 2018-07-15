@@ -49,7 +49,7 @@ if (!defined("WHMCS")) {
  *
  * @return array
  */
-function provisioningmodule_MetaData()
+function smartdns_MetaData()
 {
     return array(
         'DisplayName' => 'Demo Provisioning Module',
